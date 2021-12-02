@@ -1,5 +1,5 @@
 from optparse import OptionParser
-from itertools import islice, tee
+from itertools import tee
 
 parser = OptionParser()
 parser.add_option("-f", "--file", dest="filename",
