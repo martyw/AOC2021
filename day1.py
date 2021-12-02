@@ -17,7 +17,11 @@ def triplewise(iterable):
     # triplewise('ABCDEFG') -> ABC BCD CDE DEF EFG
     for (a, _), (b, c) in pairwise(pairwise(iterable)):
         yield a, b, c
-   
+
+def num_increases(data):
+	bigger = [first for first, second in pairwise(data) if second > first] 
+	return len(bigger)
+	   
 if not options.filename:
     parser.error('Filename not given')
 else:
@@ -25,11 +29,9 @@ else:
 		with open(options.filename, 'r') as f:
 			# part 1
 			data = [int(i) for i in f.read().splitlines()]
-			bigger = [first for first, second in pairwise(data) if second > first] 
-			print(len(bigger))
+			print(num_increases(data))
 			# part 2			
 			triplet_sums = [first + second + third  for first, second, third in triplewise(data)] 
-			bigger = [first for first, second in pairwise(triplet_sums) if second > first] 
-			print(len(bigger))
+			print(num_increases(triplet_sums))
 	except FileNotFoundError as e:
 		print(e)
