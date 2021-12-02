@@ -9,38 +9,27 @@ if not options.filename:
     parser.error('Filename not given')
 else:
 	try:
-		with open(options.filename, 'r') as f:
-			#part 1			
+		with open(options.filename, 'r') as f:		
 			data = [line.split() for line in f.read().splitlines()]
 			data = [(k, int(v)) for k, v in data]
-			horizontal = 0
-			depth = 0
-			for k, v in data:
-				if k == 'down':
-					depth += v
-				elif k == 'up':
-					depth -= v
-				elif k == 'forward':
-					horizontal += v
-				else:
-					raise ValueError
-			print(horizontal * depth)
-			
-			# part 2
-			horizontal = 0
-			depth = 0
 			aim = 0
+			horizontal = 0
+			depth_part1 = 0
+			depth_part2 = 0
 			for k, v in data:
 				if k == 'down':
-					aim += v
+					depth_part1 += v
 				elif k == 'up':
-					aim -= v
+					depth_part1 -= v
 				elif k == 'forward':
 					horizontal += v
-					depth += aim * v
+					depth_part2 += aim * v
 				else:
 					raise ValueError
-			print(horizontal * depth)
+				aim = depth_part1
+				
+			print(horizontal * depth_part1)
+			print(horizontal * depth_part2)
 			
 	except FileNotFoundError as e:
 		print(e)
