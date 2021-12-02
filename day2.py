@@ -12,7 +12,6 @@ else:
 		with open(options.filename, 'r') as f:		
 			data = [line.split() for line in f.read().splitlines()]
 			data = [(k, int(v)) for k, v in data]
-			aim = 0
 			horizontal = 0
 			depth_part1 = 0
 			depth_part2 = 0
@@ -23,10 +22,9 @@ else:
 					depth_part1 -= v
 				elif k == 'forward':
 					horizontal += v
-					depth_part2 += aim * v
+					depth_part2 += depth_part1 * v
 				else:
 					raise ValueError
-				aim = depth_part1
 				
 			print(horizontal * depth_part1)
 			print(horizontal * depth_part2)
