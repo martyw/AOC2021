@@ -13,7 +13,7 @@ else:
 			data = [line.split() for line in f.read().splitlines()]
 			data = [(k, int(v)) for k, v in data]
 			horizontal = 0
-			depth_part1 = 0
+			depth_part1 = 0 # dient als aim in part 2
 			depth_part2 = 0
 			for k, v in data:
 				if k == 'down':
