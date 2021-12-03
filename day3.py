@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from optparse import OptionParser
 from enum import Enum, auto
 
@@ -16,15 +17,9 @@ def rank_bits(data):
 	ones = [0] * bytesize
 	
 	for line in data:
-		if len(line) != bytesize:
-			raise ValueError(line)
 		for i in range(0, bytesize):
-			if line[i] == '0':
-				zeros[i] += 1
-			elif line[i] == '1':
-				ones[i] += 1
-			else:
-				raise ValueError(i)
+			zeros[i] += int(line[i] == '0')
+			ones[i] += int(line[i] == '1')
 	return zeros, ones
 
 def calculate_greeks(data):
@@ -33,29 +28,16 @@ def calculate_greeks(data):
 	gamma = [0] * bytesize
 	epsilon = [0] * bytesize
 	for i in range(0, bytesize):
-		if ones[i] >= zeros[i]:
-			gamma[i] = str(1)
-			epsilon[i] = str(0)
-		else:
-			epsilon[i] = str(1)
-			gamma[i] = str(0)
+		gamma[i] = str(1) if ones[i] >= zeros[i] else str(0)
+		epsilon[i] = str(0) if ones[i] >= zeros[i] else str(1)
 	return gamma, epsilon
-
-def power_consumption(data):
-	gamma, epsilon = calculate_greeks(data)
-	return int(''.join(gamma), 2) * int(''.join(epsilon), 2)
 
 def get_rating(data, test_type):
 	bytesize = len(data[0])
 	test_data = data
-	
-	if test_type == WhatTest.OXYGEN:
-		test_gamma_on = '1'
-	else:
-		test_gamma_on = '0'
+	test_gamma_on = '1' if test_type == WhatTest.OXYGEN else '0' 
 
-	j = 0	
-	while j < bytesize:
+	for j in range(0, bytesize):
 		gamma, epsilon = calculate_greeks(test_data)
 		if gamma[j] == test_gamma_on:
 			test_data = [x for x in test_data if x[j] == '1']
@@ -64,10 +46,12 @@ def get_rating(data, test_type):
 		
 		if len(test_data) == 1:
 			break
-		
-		j += 1
 	
 	return int(test_data[0],2)
+
+def power_consumption(data):
+	gamma, epsilon = calculate_greeks(data)
+	return int(''.join(gamma), 2) * int(''.join(epsilon), 2)
 	
 def oxygen_generator_rating(data):
 	return get_rating(data, WhatTest.OXYGEN)
