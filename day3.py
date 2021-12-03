@@ -5,7 +5,7 @@ parser.add_option("-f", "--file", dest="filename",
                   help="file with input data", metavar="FILE")
 (options, args) = parser.parse_args()
 
-def calculate_greeks(data):
+def rank_bits(data):
 	bytesize = len(data[0])
 	zeros = [0] * bytesize 
 	ones = [0] * bytesize
@@ -20,6 +20,11 @@ def calculate_greeks(data):
 				ones[i] += 1
 			else:
 				raise ValueError(i)
+	return zeros, ones
+
+def calculate_greeks(data):
+	bytesize = len(data[0])
+	zeros, ones = rank_bits(data)
 	gamma = [0] * bytesize
 	epsilon = [0] * bytesize
 	for i in range(0, bytesize):
