@@ -1,9 +1,14 @@
 from optparse import OptionParser
+from enum import Enum, auto
 
 parser = OptionParser()
 parser.add_option("-f", "--file", dest="filename",
                   help="file with input data", metavar="FILE")
 (options, args) = parser.parse_args()
+
+class WhatTest(Enum):
+	OXYGEN = auto()
+	CO2 = auto()
 
 def rank_bits(data):
 	bytesize = len(data[0])
@@ -40,41 +45,35 @@ def power_consumption(data):
 	gamma, epsilon = calculate_greeks(data)
 	return int(''.join(gamma), 2) * int(''.join(epsilon), 2)
 
-def oxygen_generator_rating(data):
+def get_rating(data, test_type):
 	bytesize = len(data[0])
-	oxygen_generator_data = data
-	j = 0
+	test_data = data
+	
+	if test_type == WhatTest.OXYGEN:
+		test_gamma_on = '1'
+	else:
+		test_gamma_on = '0'
+
+	j = 0	
 	while j < bytesize:
-		gamma, epsilon = calculate_greeks(oxygen_generator_data)
-		if gamma[j] == '1':
-			oxygen_generator_data = [x for x in oxygen_generator_data if x[j] == '1']
+		gamma, epsilon = calculate_greeks(test_data)
+		if gamma[j] == test_gamma_on:
+			test_data = [x for x in test_data if x[j] == '1']
 		else:
-			oxygen_generator_data = [x for x in oxygen_generator_data if x[j] == '0']
+			test_data = [x for x in test_data if x[j] == '0']
 		
-		if len(oxygen_generator_data) == 1:
+		if len(test_data) == 1:
 			break
 		
 		j += 1
 	
-	return int(oxygen_generator_data[0],2)
+	return int(test_data[0],2)
+	
+def oxygen_generator_rating(data):
+	return get_rating(data, WhatTest.OXYGEN)
 
 def co2_scrubber_rating(data):
-	bytesize = len(data[0])
-	co2_scrubber_data = data
-	j = 0
-	while j < bytesize:
-		gamma, epsilon = calculate_greeks(co2_scrubber_data)
-		if gamma[j] == '0':
-			co2_scrubber_data = [x for x in co2_scrubber_data if x[j] == '1']
-		else:
-			co2_scrubber_data = [x for x in co2_scrubber_data if x[j] == '0']
-		
-		if len(co2_scrubber_data) == 1:
-			break
-		
-		j += 1
-	
-	return int(co2_scrubber_data[0],2)
+	return get_rating(data, WhatTest.CO2)
 	
 	
 data = ['00100', '11110', '10110', '10111', '10101', '01111', '00111', '11100', '10000', '11001', '00010', '01010']
