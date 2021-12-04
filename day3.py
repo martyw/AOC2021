@@ -3,8 +3,7 @@ from optparse import OptionParser
 from enum import Enum, auto
 
 parser = OptionParser()
-parser.add_option("-f", "--file", dest="filename",
-                  help="file with input data", metavar="FILE")
+parser.add_option("-f", "--file", dest="filename", help="file with input data", metavar="FILE")
 (options, args) = parser.parse_args()
 
 class WhatTest(Enum):
