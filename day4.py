@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from optparse import OptionParser
-from copy import deepcopy
 from time import time
 
 parser = OptionParser()
@@ -79,9 +78,8 @@ else:
 	try:
 		start_time = int(round(time() * 1000))
 		with open(options.filename, 'r') as f:
-			drawings_part1 = [int(x) for x in f.readline().split(',')]
+			drawings = [int(x) for x in f.readline().split(',')]
 			_ = f.readline()
-			drawings_part2 = deepcopy(drawings_part1)
 			# filter empty lines
 			lines = list(filter(None, f.read().splitlines())) 
 			# list them in lists of five strings
@@ -90,17 +88,13 @@ else:
 			boards_collection = [[row.split() for row in rows] for rows in boards_collection]
 			# convert to [integer, draw status]
 			boards_collection = [[[[int(x), False] for x in row] for row in matrix] for matrix in boards_collection]
-			# play game part 1
-			lucky_draw, lucky_board = draw_part1(drawings_part1, boards_collection)
-			if lucky_board:
-				score = calculate_score(lucky_board)
-				print(lucky_draw, score, lucky_draw * score)
-
-			# play game part 2			
-			lucky_draw, lucky_board = draw_part2(drawings_part2, boards_collection)
-			if lucky_board:
-				score = calculate_score(lucky_board)
-				print(lucky_draw, score, lucky_draw * score)
+			# play part 1 & part 2 bingos
+			draw_functions = (draw_part1, draw_part2)
+			for func in draw_functions:
+				lucky_draw, lucky_board = func(drawings, boards_collection)
+				if lucky_board:
+					score = calculate_score(lucky_board)
+					print(lucky_draw, score, lucky_draw * score)
 			print("### total run time is %s miliseconds" % (int(round(time() * 1000)) - start_time))
 	except FileNotFoundError as e:
 		print(e)
