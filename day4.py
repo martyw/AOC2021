@@ -56,7 +56,7 @@ def calculate_score(board):
 	return notchecked_sum
 
 def draw_part2(drawings, boards):
-	status_list = [False] * len(boards_collection)
+	status_list = [False] * len(boards)
 	last_bingo = len(status_list) - status_list.count(True)
 	while drawings:
 		for i in range(len(boards)):
