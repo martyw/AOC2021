@@ -56,7 +56,8 @@ def calculate_score(board):
 				notchecked_sum += elt[0]
 	return notchecked_sum
 
-def draw_part2(drawings, boards, status_list):
+def draw_part2(drawings, boards):
+	status_list = [False] * len(boards_collection)
 	last_bingo = len(status_list) - status_list.count(True)
 	while drawings:
 		for i in range(len(boards)):
@@ -96,8 +97,7 @@ else:
 				print(lucky_draw, score, lucky_draw * score)
 
 			# play game part 2			
-			boards_status = [False] * len(boards_collection)
-			lucky_draw, lucky_board = draw_part2(drawings_part2, boards_collection, boards_status)
+			lucky_draw, lucky_board = draw_part2(drawings_part2, boards_collection)
 			if lucky_board:
 				score = calculate_score(lucky_board)
 				print(lucky_draw, score, lucky_draw * score)
