@@ -98,8 +98,8 @@ class Line:
 				y = self.startpoint.y
 				while self.compare(x, self.endpoint.x):
 					res.append(Point([x, y]))
-					x = x + self.x_orientation()
-					y = y + self.y_orientation()
+					x += + self.x_orientation()
+					y += self.y_orientation()
 		return res
 
 if not options.filename:
