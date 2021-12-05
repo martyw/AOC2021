@@ -55,7 +55,19 @@ class Line:
 			return Orientation.UP if self.startpoint.y < self.endpoint.y else Orientation.DOWN
 		else:
 			return Orientation.UNDECIDED
-			
+	
+	def x_orientation(self):
+		if self.startpoint.x > self.endpoint.x:
+			return Orientation.DOWN
+		else:
+			return Orientation.UP
+
+	def y_orientation(self):
+		if self.startpoint.y > self.endpoint.y:
+			return Orientation.DOWN
+		else:
+			return Orientation.UP
+
 	def max_coordinate_value(self):
 		return max(self.startpoint.x, self.startpoint.y, self.endpoint.x, self.endpoint.y)
 
@@ -71,6 +83,13 @@ class Line:
 			
 		return res
 
+	def compare(self, x1, x2):
+		if self.x_orientation() == Orientation.UP:
+			return x1 <= x2
+		else:
+			return x1 >= x2
+		
+
 	def covered_points_part2(self):
 		if self.kind() == KindOfLine.HORIZONTAL:
 			res = [Point((x, self.startpoint.y)) for x in range(self.startpoint.x, self.endpoint.x, self.orientation())]
@@ -79,29 +98,13 @@ class Line:
 			res = [Point((self.startpoint.x, y)) for y in range(self.startpoint.y, self.endpoint.y, self.orientation())]
 			res.append(self.endpoint)
 		else:
-			res = []
-			if self.startpoint.x > self.endpoint.x:
-				x_orientation = Orientation.DOWN
-			else:
-				x_orientation = Orientation.UP
-			
-			if self.startpoint.y > self.endpoint.y:
-				y_orientation = Orientation.DOWN
-			else:
-				y_orientation = Orientation.UP
-
+			res = []			
 			x = self.startpoint.x
 			y = self.startpoint.y
-			if x_orientation == Orientation.UP:
-				while x <= self.endpoint.x:
-					res.append(Point([x, y]))
-					x = x + x_orientation
-					y = y + y_orientation
-			else:
-				while x >= self.endpoint.x:
-					res.append(Point([x, y]))
-					x = x + x_orientation
-					y = y + y_orientation
+			while self.compare(x, self.endpoint.x):
+				res.append(Point([x, y]))
+				x = x + self.x_orientation()
+				y = y + self.y_orientation()
 		return res
 
 if not options.filename:
