@@ -106,7 +106,6 @@ if not options.filename:
     parser.error("Filename not given")
 else:
 	try:
-		start_time = int(round(time() * 1000))
 		with open(options.filename, 'r') as f:
 			lines_of_vents = [ Line(x) for x in f.read().splitlines()]
 			size = max([l.max_coordinate_value() for l in lines_of_vents]) + 1
