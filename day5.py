@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 from optparse import OptionParser
 from enum import Enum, IntEnum, auto
+from time import time
 
 parser = OptionParser()
 parser.add_option("-f", "--file", dest="filename", help="file with input data", metavar="FILE")
 (options, args) = parser.parse_args()
+
+class Puzzle(Enum):
+	PART_1 = auto()
+	PART_2 = auto()
 
 class KindOfLine(Enum):
 	HORIZONTAL = auto()
@@ -71,17 +76,6 @@ class Line:
 	def max_coordinate_value(self):
 		return max(self.startpoint.x, self.startpoint.y, self.endpoint.x, self.endpoint.y)
 
-	def covered_points_part1(self):
-		if self.kind() == KindOfLine.HORIZONTAL:
-			res = [Point((x, self.startpoint.y)) for x in range(self.startpoint.x, self.endpoint.x, self.orientation())]
-			res.append(self.endpoint)
-		elif self.kind() == KindOfLine.VERTICAL:
-			res = [Point((self.startpoint.x, y)) for y in range(self.startpoint.y, self.endpoint.y, self.orientation())]
-			res.append(self.endpoint)
-		else:
-			res = []
-			
-		return res
 
 	def compare(self, x1, x2):
 		if self.x_orientation() == Orientation.UP:
@@ -90,7 +84,7 @@ class Line:
 			return x1 >= x2
 		
 
-	def covered_points_part2(self):
+	def covered_points(self, which_part):
 		if self.kind() == KindOfLine.HORIZONTAL:
 			res = [Point((x, self.startpoint.y)) for x in range(self.startpoint.x, self.endpoint.x, self.orientation())]
 			res.append(self.endpoint)
@@ -98,40 +92,34 @@ class Line:
 			res = [Point((self.startpoint.x, y)) for y in range(self.startpoint.y, self.endpoint.y, self.orientation())]
 			res.append(self.endpoint)
 		else:
-			res = []			
-			x = self.startpoint.x
-			y = self.startpoint.y
-			while self.compare(x, self.endpoint.x):
-				res.append(Point([x, y]))
-				x = x + self.x_orientation()
-				y = y + self.y_orientation()
+			res = []
+			if which_part == Puzzle.PART_2:			
+				x = self.startpoint.x
+				y = self.startpoint.y
+				while self.compare(x, self.endpoint.x):
+					res.append(Point([x, y]))
+					x = x + self.x_orientation()
+					y = y + self.y_orientation()
 		return res
 
 if not options.filename:
-    parser.error('Filename not given')
+    parser.error("Filename not given")
 else:
 	try:
+		start_time = int(round(time() * 1000))
 		with open(options.filename, 'r') as f:
 			lines_of_vents = [ Line(x) for x in f.read().splitlines()]
 			size = max([l.max_coordinate_value() for l in lines_of_vents]) + 1
-			# part 1
-			vent_plot = [[0] * size for i in range(size)]
-			for line in lines_of_vents:
-				for point in line.covered_points_part1():
-					vent_plot[point.y][point.x] += 1
-			danger = 0
-			for line in vent_plot:
-				danger += len([x for x in line if x > 1])
-			print(danger)
-			
-			# part 2
-			vent_plot = [[0] * size for i in range(size)]
-			for line in lines_of_vents:
-				for point in line.covered_points_part2():
-					vent_plot[point.y][point.x] += 1
-			danger = 0
-			for line in vent_plot:
-				danger += len([x for x in line if x > 1])
-			print(danger)						
+			for part in Puzzle:
+				start_time = int(round(time() * 1000))
+				vent_plot = [[0] * size for i in range(size)]
+				for line in lines_of_vents:
+					for point in line.covered_points(part):
+						vent_plot[point.y][point.x] += 1
+				danger = 0
+				for line in vent_plot:
+					danger += len([x for x in line if x > 1])
+				print(danger)
+				print("### run time is %s miliseconds" % (int(round(time() * 1000)) - start_time))
 	except FileNotFoundError as e:
 		print(e)
