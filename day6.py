@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from optparse import OptionParser
-from enum import Enum, auto
+from collections import Counter
 
 parser = OptionParser()
 parser.add_option("-f", "--file", dest="filename",
@@ -16,16 +16,23 @@ else:
 			data = [int(i.strip()) for i in f.readline().split(',')]
 			parts = (80, 256)
 			for part in parts:
-				for i in range(part):
-					res = []
-					for j in data:
-						if j == 0:
-							res.append(6)
-							res.append(8)
+				c = Counter(data)
+				this_generation = dict(sorted({ k: v for k, v in c.items() }.items()))
+				for _ in range(part):
+					new_generation = dict()
+					for age in this_generation.keys():
+						if age == 0:
+							new_generation[6] = this_generation[0]
+							new_generation[8] = this_generation[0]
 						else:
-							res.append(j-1)
-					data = res
-					print(i, len(data))
-						
+							if age != 7:
+								new_generation[age-1] = this_generation[age]
+							else:
+								try:
+									new_generation[age-1] = this_generation[age] + new_generation[6]
+								except KeyError:
+									new_generation[age-1] = this_generation[age]
+					this_generation = dict(sorted(new_generation.items()))
+				print(sum(this_generation.values()))						
 	except FileNotFoundError as e:
 		print(e)
