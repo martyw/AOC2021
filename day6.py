@@ -17,7 +17,7 @@ else:
 			parts = (80, 256)
 			for part in parts:
 				c = Counter(data)
-				this_generation = dict(sorted({ k: v for k, v in c.items() }.items()))
+				this_generation = dict(sorted({k: v for k, v in c.items()}.items()))
 				for _ in range(part):
 					new_generation = dict()
 					for age in this_generation.keys():
@@ -29,9 +29,9 @@ else:
 								new_generation[age-1] = this_generation[age]
 							else:
 								try:
-									new_generation[age-1] = this_generation[age] + new_generation[6]
+									new_generation[6] = this_generation[7] + new_generation[6]
 								except KeyError:
-									new_generation[age-1] = this_generation[age]
+									new_generation[6] = this_generation[7]
 					this_generation = dict(sorted(new_generation.items()))
 				print(sum(this_generation.values()))						
 	except FileNotFoundError as e:
