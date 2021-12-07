@@ -19,6 +19,6 @@ else:
 			data = [int(i.strip()) for i in f.readline().split(',')]
 			print(solver(data, lambda x, y: abs(x - y)))
 			print(solver(data, lambda x, y: (abs(x - y)*(abs(x - y) + 1)) // 2))
-		print("*** Run time: {} ms".format((time() - start_time) * 1000))
+		print("*** Run time: {} ms".format(int((time() - start_time) * 1000)))
 	except FileNotFoundError as e:
 		print(e)
