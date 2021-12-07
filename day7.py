@@ -19,13 +19,11 @@ def part1(data):
 
 def part2(data):
 	fuel_at_position = {}
-	min_position = min(data)
-	max_position = max(data)
 	for position_x in range(max(data)+1):
 			fuel_needed = 0
 			for position_y in data:
 				dist = abs(position_x -position_y)
-				fuel_needed += (dist*(dist + 1))/2
+				fuel_needed += int((dist*(dist + 1))/2)
 			fuel_at_position[position_x] = fuel_needed
 	return min(fuel_at_position.values())	
 								
