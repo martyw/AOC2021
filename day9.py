@@ -24,13 +24,10 @@ def find_low_points(data):
 
 	for i in range(dim_x):
 		for j in range(dim_y):
-			bigger = 0
 			hood = neighbours((i,j), dim_x, dim_y)
-			for n in hood:
-				if data[i][j] < data[n[0]][n[1]]:
-					bigger += 1
+			bigger = [n for n in hood if data[i][j] < data[n[0]][n[1]]]
 
-			if bigger == len(hood):
+			if len(bigger) == len(hood):
 				low_points.append((i, j))
 	
 	return low_points
@@ -44,7 +41,6 @@ def part1(data):
 def find_basin_size(res, point, data, points_in_basin):
 	x = point[0]
 	y = point[1]
-
 	dim_x = len(data)
 	dim_y = len(data[0])
 
