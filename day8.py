@@ -3,6 +3,7 @@ from optparse import OptionParser
 from time import time
 from collections import Counter
 from itertools import permutations
+from time import time
 
 parser = OptionParser()
 parser.add_option("-f", "--file", dest="filename",
@@ -69,6 +70,7 @@ if not options.filename:
 	parser.error("Filename not given")
 else:
 	try:
+		start_time = time()
 		ssd = SevenSegmentDisplay()
 		unique_lenghths = ssd.get_unique_digits_on_length()
 		with open(options.filename, 'r') as f:
@@ -83,5 +85,6 @@ else:
 			
 			# part 2
 			print(sum([int(ssd.scrambled_value(line)) for line in file_content]))
+		print("*** Run time: {} ms".format(int((time() - start_time) * 1000)))
 	except FileNotFoundError as e:
 		print(e)

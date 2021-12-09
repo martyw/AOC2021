@@ -7,7 +7,7 @@ parser.add_option("-f", "--file", dest="filename",
                   help="file with input data", metavar="FILE")
 (options, args) = parser.parse_args()
 
-def neighbours(point):
+def neighbours(point, dim_x, dim_y):
 	x = point[0]
 	y = point[1]
 	
@@ -15,48 +15,67 @@ def neighbours(point):
 	
 	return res
 
-def part1(data):
-	risk_level = []
+
+def find_low_points(data):
+	dim_x = len(data)
+	dim_y = len(data[0])
+
+	low_points = []
+
 	for i in range(dim_x):
 		for j in range(dim_y):
 			bigger = 0
-			hood = neighbours((i,j))
+			hood = neighbours((i,j), dim_x, dim_y)
 			for n in hood:
 				if data[i][j] < data[n[0]][n[1]]:
 					bigger += 1
 
 			if bigger == len(hood):
-				risk_level.append(data[i][j] + 1)
+				low_points.append((i, j))
+	
+	return low_points
+	
+
+def part1(data):
+	risk_level = [data[i][j] + 1 for i, j in find_low_points(data)]
 
 	return sum(risk_level)
 							
-def basin(point, current_basin):
-	"""recurse through neighbours and add them to current basin if qualify and if they are not already in another one"""
+def find_basin_length(res, dim_x, dim_y, point, data, points_in_basin):
 	x = point[0]
 	y = point[1]
-	for n in neighbours((point[0], point[1])):
+
+	points_in_basin[x][y] = True
+	for n in neighbours((point[0], point[1]), dim_x, dim_y):
 		neighbour_x = n[0]
 		neighbour_y = n[1]
-		if not basin_points[neighbour_x][neighbour_y] and data[neighbour_x][neighbour_y] != 9:
-			basin_points[neighbour_x][neighbour_y] = True
-			current_basin = basin((neighbour_x, neighbour_y), current_basin + [(neighbour_x, neighbour_y)])
+		
+		if not points_in_basin[neighbour_x][neighbour_y] and data[x][y] <= data[neighbour_x][neighbour_y] < 9:
+			points_in_basin[neighbour_x][neighbour_y] = True
+			res += 1
+			res = find_basin_length(res, dim_x, dim_y, (neighbour_x,neighbour_y), data, points_in_basin)
 	
-	return current_basin
-
+	return res
+	
 def part2(data):
-	for i in range(dim_x):
-		for j in range(dim_y):
-			if not basin_points[i][j] and data[i][j] != 9:
-				basin_points[i][j] = True
-				basins.append(basin((i, j), [(i,j)]))
+	dim_x = len(data)
+	dim_y = len(data[0])
+
+	basin_lengths = []
+	points_in_basin = [[False] * dim_y for i in range(dim_x)]
+
+	for i, j in find_low_points(data):
+		res = 1
+		res = find_basin_length(res, dim_x, dim_y, (i,j), data, points_in_basin)
+		basin_lengths.append(res)
+	
 	# multiply length of three biggest basins
 	res = 1
-	for x in sorted([len(b) for b in basins])[-3:]:
+	for x in sorted(basin_lengths)[-3:]:
 		res = res * x
 
 	return res
-				
-										
+
 if not options.filename:
 	parser.error("Filename not given")
 else:
@@ -64,14 +83,8 @@ else:
 		start_time = time()
 		with open(options.filename, 'r') as f:
 			data = [[int(j) for j in list(i.strip())] for i in f.read().splitlines()]
-			dim_x = len(data)
-			dim_y = len(data[0])
 
 			print(part1(data))
-			# keep track which points are in a basin
-			basin_points = [[False] * dim_y for i in range(dim_x)]
-			# the resulting list of basins
-			basins = []
 			print(part2(data))					
 		print("*** Run time: {} ms".format(int((time() - start_time) * 1000)))
 	except FileNotFoundError as e:
