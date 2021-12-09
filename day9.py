@@ -61,17 +61,17 @@ def part2(data):
 	dim_x = len(data)
 	dim_y = len(data[0])
 
-	basin_lengths = []
+	basin_sizes = []
 	points_in_basin = [[False] * dim_y for i in range(dim_x)]
 
 	for i, j in find_low_points(data):
 		res = 1
 		res = find_basin_size(res, dim_x, dim_y, (i,j), data, points_in_basin)
-		basin_lengths.append(res)
+		basin_sizes.append(res)
 	
 	# multiply length of three biggest basins
 	res = 1
-	for x in sorted(basin_lengths)[-3:]:
+	for x in sorted(basin_sizes)[-3:]:
 		res = res * x
 
 	return res
