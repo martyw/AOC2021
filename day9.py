@@ -38,8 +38,7 @@ def find_basin_size(res, point, data, points_in_basin):
 	(dim_x, dim_y) = (len(data), len(data[0]))
 
 	points_in_basin[x][y] = True
-	for (neighbour_x, neighbour_y) in neighbours((point[0], point[1]), dim_x, dim_y):
-		
+	for (neighbour_x, neighbour_y) in neighbours((point[0], point[1]), dim_x, dim_y):		
 		if not points_in_basin[neighbour_x][neighbour_y] and data[x][y] <= data[neighbour_x][neighbour_y] < 9:
 			points_in_basin[neighbour_x][neighbour_y] = True
 			res = find_basin_size(res + 1, (neighbour_x,neighbour_y), data, points_in_basin)
