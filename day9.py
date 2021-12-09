@@ -41,9 +41,12 @@ def part1(data):
 
 	return sum(risk_level)
 							
-def find_basin_size(res, dim_x, dim_y, point, data, points_in_basin):
+def find_basin_size(res, point, data, points_in_basin):
 	x = point[0]
 	y = point[1]
+
+	dim_x = len(data)
+	dim_y = len(data[0])
 
 	points_in_basin[x][y] = True
 	for n in neighbours((point[0], point[1]), dim_x, dim_y):
@@ -52,7 +55,7 @@ def find_basin_size(res, dim_x, dim_y, point, data, points_in_basin):
 		
 		if not points_in_basin[neighbour_x][neighbour_y] and data[x][y] <= data[neighbour_x][neighbour_y] < 9:
 			points_in_basin[neighbour_x][neighbour_y] = True
-			res = find_basin_size(res + 1, dim_x, dim_y, (neighbour_x,neighbour_y), data, points_in_basin)
+			res = find_basin_size(res + 1, (neighbour_x,neighbour_y), data, points_in_basin)
 	
 	return res
 	
@@ -64,7 +67,7 @@ def part2(data):
 	points_in_basin = [[False] * dim_y for i in range(dim_x)]
 
 	for i, j in find_low_points(data):
-		res = find_basin_size(1, dim_x, dim_y, (i,j), data, points_in_basin)
+		res = find_basin_size(1, (i,j), data, points_in_basin)
 		basin_sizes.append(res)
 	
 	# multiply length of three biggest basins
