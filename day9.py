@@ -19,13 +19,13 @@ def part1(data):
 	risk_level = []
 	for i in range(dim_x):
 		for j in range(dim_y):
-			all_bigger = 0
+			bigger = 0
 			hood = neighbours((i,j))
 			for n in hood:
 				if data[i][j] < data[n[0]][n[1]]:
-					all_bigger += 1
+					bigger += 1
 
-			if all_bigger == len(hood):
+			if bigger == len(hood):
 				risk_level.append(data[i][j] + 1)
 
 	return sum(risk_level)
