@@ -16,7 +16,6 @@ def neighbours(point, dim_x, dim_y):
 
 def find_low_points(data):
 	(dim_x, dim_y) = (len(data), len(data[0]))
-
 	low_points = []
 
 	for i in range(dim_x):
@@ -50,8 +49,8 @@ def find_basin_size(res, point, data, points_in_basin):
 	
 def part2(data):
 	(dim_x, dim_y) = (len(data), len(data[0]))
-
 	basin_sizes = []
+	
 	for i, j in find_low_points(data):
 		res = find_basin_size(1, (i,j), data, [[False] * dim_y for i in range(dim_x)])
 		basin_sizes.append(res)
