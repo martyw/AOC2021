@@ -19,7 +19,7 @@ def parse_chunk(chunk):
 		else:
 			raise ValueError("Unexpected token found: {}".format(ch))
 
-	return [token_pairs[ch] for ch in reversed(open_tokens_stack)] # the remainder
+	return [token_pairs[ch] for ch in reversed(open_tokens_stack)] # the missing remainder
 
 def part1(data):
 	score_map = {')': 3, ']': 57, '}': 1197, '>': 25137 }
