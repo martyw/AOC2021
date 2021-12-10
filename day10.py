@@ -9,19 +9,16 @@ parser.add_option("-f", "--file", dest="filename",
 
 def parse_chunk(chunk):
 	token_pairs = { '(': ')', '[': ']', '{':'}', '<': '>'}
-	open_tokens = []
-	
+	open_tokens_stack = []
 	for ch in chunk:
 		if ch in token_pairs.keys():
-			open_tokens.append(ch)
-		elif not open_tokens:
-			return ch
-		elif token_pairs[open_tokens[-1]] == ch:
-			open_tokens.pop()
+			open_tokens_stack.append(ch)
+		elif ch in token_pairs.values():
+			if ch != token_pairs[open_tokens_stack.pop()]:
+				return ch
 		else:
 			return ch
-	
-	return [token_pairs[ch] for ch in reversed(open_tokens)]
+	return [token_pairs[ch] for ch in reversed(open_tokens_stack)]
 
 def part1(data):
 	score_map = {')': 3, ']': 57, '}': 1197, '>': 25137 }
