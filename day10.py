@@ -24,10 +24,9 @@ def parse_chunk(chunk):
 def part1(data):
 	score_map = {')': 3, ']': 57, '}': 1197, '>': 25137 }
 
-	ret = [ parse_chunk(line) for line in data ]
-	ret = [ score_map[i] for i in ret if type(i) is str ]
+	ret = [ score_map[i] for i in [ parse_chunk(line) for line in data ] if type(i) is str ]
 	
-	return sum(ret)
+	return sum([ score_map[i] for i in [ parse_chunk(line) for line in data ] if type(i) is str ])
 
 def calculate_completion_score(li):
 	completion_score = {')': 1, ']': 2, '}': 3, '>': 4 }
@@ -38,8 +37,9 @@ def calculate_completion_score(li):
 	return score
 
 def part2(data):
-	not_corrupted_lines = [ line for line in data if type(parse_chunk(line)) is list ]
-	completion_lists = [parse_chunk(chunk) for chunk in not_corrupted_lines]
+	parsed_data = [parse_chunk(chunk) for chunk in data]
+	not_corrupted_lines = [ line for line in parsed_data if type(line) is list ]
+	completion_lists = [li for li in not_corrupted_lines]
 	completion_scores = [calculate_completion_score(li) for li in completion_lists]
 	
 	return sorted(completion_scores)[len(completion_scores) // 2]
