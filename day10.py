@@ -24,8 +24,6 @@ def parse_chunk(chunk):
 def part1(data):
 	score_map = {')': 3, ']': 57, '}': 1197, '>': 25137 }
 
-	ret = [score_map[i] for i in [parse_chunk(line) for line in data] if type(i) is str]
-	
 	return sum([score_map[i] for i in [parse_chunk(line) for line in data] if type(i) is str])
 
 def calculate_completion_score(li):
