@@ -36,8 +36,7 @@ def calculate_completion_score(li):
 	score = 0
 	
 	for ch in li:
-		score *= 5
-		score += completion_score[ch]
+		score = 5 * score + completion_score[ch]
 	return score
 
 def part2(data):
