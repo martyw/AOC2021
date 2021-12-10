@@ -15,7 +15,7 @@ def parse_chunk(chunk):
 			open_tokens_stack.append(ch)
 		elif ch in token_pairs.values():
 			if ch != token_pairs[open_tokens_stack.pop()]:
-				return ch
+				return ch # the first corrupted character
 		else:
 			raise ValueError("Unexpected token found: {}".format(ch))
 
