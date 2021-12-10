@@ -38,7 +38,7 @@ def calculate_completion_score(li):
 
 def part2(data):
 	parsed_data = [parse_chunk(chunk) for chunk in data]
-	not_corrupted_lines = [ line for line in parsed_data if type(line) is list ]
+	not_corrupted_lines = [ li for li in parsed_data if type(li) is list ]
 	completion_scores = [calculate_completion_score(li) for li in not_corrupted_lines]
 	
 	return sorted(completion_scores)[len(completion_scores) // 2]
