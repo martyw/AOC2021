@@ -17,8 +17,9 @@ def parse_chunk(chunk):
 			if ch != token_pairs[open_tokens_stack.pop()]:
 				return ch
 		else:
-			return ch
-	return [token_pairs[ch] for ch in reversed(open_tokens_stack)]
+			raise ValueError("Unexpected token found: {}".format(ch))
+
+	return [token_pairs[ch] for ch in reversed(open_tokens_stack)] # the remainder
 
 def part1(data):
 	score_map = {')': 3, ']': 57, '}': 1197, '>': 25137 }
@@ -55,3 +56,4 @@ else:
 		print("*** Run time: {} ms".format(int((time() - start_time) * 1000)))
 	except FileNotFoundError as e:
 		print(e)
+
