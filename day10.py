@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from optparse import OptionParser
 from time import time
+"""https://adventofcode.com/2021/day/10"""
 
 parser = OptionParser()
 parser.add_option("-f", "--file", dest="filename",
@@ -28,15 +29,15 @@ def part1(data):
 
 def calculate_completion_score(li):
 	completion_score = {')': 1, ']': 2, '}': 3, '>': 4 }
-	score = 0
 	
+	score = 0
 	for ch in li:
 		score = 5 * score + completion_score[ch]
+	
 	return score
 
 def part2(data):
-	not_corrupted_lines = [li for li in [parse_chunk(chunk) for chunk in data] if type(li) is list]
-	completion_scores = [calculate_completion_score(li) for li in not_corrupted_lines]
+	completion_scores = [calculate_completion_score(li) for li in [parse_chunk(chunk) for chunk in data] if type(li) is list]
 	
 	return sorted(completion_scores)[len(completion_scores) // 2]
 										
